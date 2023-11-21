@@ -56,4 +56,15 @@ function listNewItem(string memory _name, uint256 _price) external {
 
         emit ItemListed(newItemId, msg.sender, _name, _price);
     }
+function purchaseItem(uint256 _itemId) external itemAvailable(_itemId) {
+        Item storage item = items[_itemId];
+
+        // Transfer item price from the buyer to the seller
+        paymentToken.safeTransferFrom(msg.sender, item.seller, item.price);
+
+        // Mark the item as no longer available
+        item.available = false;
+
+        emit ItemPurchased(_itemId, msg.sender);
+    }
 }
