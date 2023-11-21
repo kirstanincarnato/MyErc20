@@ -44,5 +44,16 @@ contract DecentralizedMarketplace is Ownable {
         paymentToken = IERC20(_paymentToken);
         listingFee = _listingFee;
     }
+function listNewItem(string memory _name, uint256 _price) external {
+        require(_price > 0, "Item price must be greater than 0");
 
+        // Transfer listing fee from the seller to the contract
+        paymentToken.safeTransferFrom(msg.sender, address(this), listingFee);
+
+        uint256 newItemId = ++itemIdCounter;
+        items[newItemId] = Item(newItemId, msg.sender, _name, _price, true);
+        userItems[msg.sender].push(newItemId);
+
+        emit ItemListed(newItemId, msg.sender, _name, _price);
+    }
 }
