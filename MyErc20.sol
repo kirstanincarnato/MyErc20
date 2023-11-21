@@ -67,4 +67,12 @@ function purchaseItem(uint256 _itemId) external itemAvailable(_itemId) {
 
         emit ItemPurchased(_itemId, msg.sender);
     }
+function getUserItems(address _user) external view returns (uint256[] memory) {
+        return userItems[_user];
+    }
+
+    function getItemDetails(uint256 _itemId) external view returns (address, string memory, uint256, bool) {
+        Item storage item = items[_itemId];
+        return (item.seller, item.name, item.price, item.available);
+    }
 }
